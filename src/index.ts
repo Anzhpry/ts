@@ -1,24 +1,51 @@
-const getArgs = (): string[] | undefined => {
-    const args = process.argv.slice(2);
+"use strict"
 
-    if (args.length) {
-        return args;
+const colors = require("colors");
+
+const [min, max] = process.argv.slice(2);
+
+const green = colors.green;
+const yellow = colors.yellow;
+const red = colors.red;
+const blue = colors.blue;
+
+let currentColor = green;
+
+const a: number = Number(min);
+const b: number = Number(max);
+
+const changeColor = (): void => {
+    switch (currentColor) {
+        case green:
+            currentColor = yellow;
+            break;
+        case yellow:
+            currentColor = red;
+            break;
+        case red:
+            currentColor = green;
+            break
     }
-
-    return undefined;
 };
 
-const forEach = <T = any>(array: T[], callback: (value: T) => void) => {
-    array.forEach((value) => callback(value));
-};
+if ((a % a == 0) && (a > 0)) {
+    for (let i: number = a; i <= b; i++) {
+        if (isPrime(i)) {
+            console.log(currentColor(i));
+            changeColor();
+        }
+    };
+} else {
+    console.log(blue("Вы ввели неверное число"));
+}
 
-const main = () => {
-    const args = getArgs();
-    if (args) {
-        forEach(args, console.log);
-    } else {
-        console.log("Аргументы не были переданы");
+function isPrime(num: number): boolean {
+    for (let i = 2, max = Math.sqrt(num); i <= max; i++) {
+        if (num % i === 0) {
+            return false;
+        }
     }
+    return num > 1
 };
 
-main();
+console.log(typeof (currentColor));
