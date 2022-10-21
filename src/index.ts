@@ -1,51 +1,25 @@
-"use strict"
+import { Book } from "./book"
+import { books } from "./book-collection"
 
-const colors = require("colors");
 
-const [min, max] = process.argv.slice(2);
-
-const green = colors.green;
-const yellow = colors.yellow;
-const red = colors.red;
-const blue = colors.blue;
-
-let currentColor = green;
-
-const a: number = Number(min);
-const b: number = Number(max);
-
-const changeColor = (): void => {
-    switch (currentColor) {
-        case green:
-            currentColor = yellow;
-            break;
-        case yellow:
-            currentColor = red;
-            break;
-        case red:
-            currentColor = green;
-            break
-    }
-};
-
-if ((a % a == 0) && (a > 0)) {
-    for (let i: number = a; i <= b; i++) {
-        if (isPrime(i)) {
-            console.log(currentColor(i));
-            changeColor();
-        }
+function findSuitableBook(
+    genre: string,
+    pagesLimit: number,
+    multipleRecommendations = true
+): Book | Book[] | undefined {
+    const findAlgorithm = (book: Book) => {
+        return book.genre === genre && book.pageAmount <= pagesLimit;
     };
-} else {
-    console.log(blue("Вы ввели неверное число"));
+    if (multipleRecommendations) {
+        return books.filter(findAlgorithm);
+    } else {
+        return books.find(findAlgorithm);
+    }
 }
 
-function isPrime(num: number): boolean {
-    for (let i = 2, max = Math.sqrt(num); i <= max; i++) {
-        if (num % i === 0) {
-            return false;
-        }
-    }
-    return num > 1
-};
-
-console.log(typeof (currentColor));
+const recommendBook = findSuitableBook("fantasy", 1000);
+if (recommendBook instanceof Book) {
+    console.log(recommendBook)
+} else {
+    console.log(recommendBook && recommendBook[0].name)
+}
