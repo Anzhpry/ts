@@ -1,24 +1,25 @@
-const getArgs = (): string[] | undefined => {
-    const args = process.argv.slice(2);
+import { Book } from "./book"
+import { books } from "./book-collection"
 
-    if (args.length) {
-        return args;
-    }
 
-    return undefined;
-};
-
-const forEach = <T = any>(array: T[], callback: (value: T) => void) => {
-    array.forEach((value) => callback(value));
-};
-
-const main = () => {
-    const args = getArgs();
-    if (args) {
-        forEach(args, console.log);
+function findSuitableBook(
+    genre: string,
+    pagesLimit: number,
+    multipleRecommendations = true
+): Book | Book[] | undefined {
+    const findAlgorithm = (book: Book) => {
+        return book.genre === genre && book.pageAmount <= pagesLimit;
+    };
+    if (multipleRecommendations) {
+        return books.filter(findAlgorithm);
     } else {
-        console.log("Аргументы не были переданы");
+        return books.find(findAlgorithm);
     }
-};
+}
 
-main();
+const recommendBook = findSuitableBook("fantasy", 1000);
+if (recommendBook instanceof Book) {
+    console.log(recommendBook)
+} else {
+    console.log(recommendBook && recommendBook[0].name)
+}
