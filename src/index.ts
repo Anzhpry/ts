@@ -1,24 +1,31 @@
-const getArgs = (): string[] | undefined => {
-    const args = process.argv.slice(2);
+import { Book } from './book.js';
+import { BueCallback, Reviews } from './types.js';
+import { Genre } from './constants.js';
+import { buy } from './helpers.js';
 
-    if (args.length) {
-        return args;
-    }
+const reviews: Reviews = [
+  ['Jhon', 5, 'It is my favorite book'],
+  ['Mary', 3, 'I expected more from it :('],
+  ['Clara', 5, 'Read it again and again!'],
+];
 
-    return undefined;
+const book = new Book({
+  name: 'Harry Potter',
+  genre: Genre.Fantasy,
+  price: 1000,
+  reviews,
+  author: { lastName: 'J. K.', firstName: 'Rowling' },
+  rating: 4.6,
+});
+
+const callback: BueCallback = (error, transactionId) => {
+  if (error === null || transactionId) {
+    console.log('Success');
+  } else {
+    console.log('Fail', error);
+  }
 };
 
-const forEach = <T = any>(array: T[], callback: (value: T) => void) => {
-    array.forEach((value) => callback(value));
-};
+buy(book, callback);
 
-const main = () => {
-    const args = getArgs();
-    if (args) {
-        forEach(args, console.log);
-    } else {
-        console.log("Аргументы не были переданы");
-    }
-};
-
-main();
+console.log('test')
