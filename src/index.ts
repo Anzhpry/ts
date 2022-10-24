@@ -1,25 +1,31 @@
-import { Book } from "./book"
-import { books } from "./book-collection"
+import { Book } from './book.js';
+import { BueCallback, Reviews } from './types.js';
+import { Genre } from './constants.js';
+import { buy } from './helpers.js';
 
+const reviews: Reviews = [
+  ['Jhon', 5, 'It is my favorite book'],
+  ['Mary', 3, 'I expected more from it :('],
+  ['Clara', 5, 'Read it again and again!'],
+];
 
-function findSuitableBook(
-    genre: string,
-    pagesLimit: number,
-    multipleRecommendations = true
-): Book | Book[] | undefined {
-    const findAlgorithm = (book: Book) => {
-        return book.genre === genre && book.pageAmount <= pagesLimit;
-    };
-    if (multipleRecommendations) {
-        return books.filter(findAlgorithm);
-    } else {
-        return books.find(findAlgorithm);
-    }
-}
+const book = new Book({
+  name: 'Harry Potter',
+  genre: Genre.Fantasy,
+  price: 1000,
+  reviews,
+  author: { lastName: 'J. K.', firstName: 'Rowling' },
+  rating: 4.6,
+});
 
-const recommendBook = findSuitableBook("fantasy", 1000);
-if (recommendBook instanceof Book) {
-    console.log(recommendBook)
-} else {
-    console.log(recommendBook && recommendBook[0].name)
-}
+const callback: BueCallback = (error, transactionId) => {
+  if (error === null || transactionId) {
+    console.log('Success');
+  } else {
+    console.log('Fail', error);
+  }
+};
+
+buy(book, callback);
+
+console.log('test')
